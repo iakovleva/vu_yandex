@@ -1,7 +1,7 @@
+import os
 import json
 from time import sleep
 import requests
-import tokens
 
 
 def get_expenses(period):
@@ -16,11 +16,10 @@ def get_expenses(period):
 
     # --- Входные данные ---
     reports_url = 'https://api.direct.yandex.com/json/v5/reports'
-    #ReportsURL = 'https://api-sandbox.direct.yandex.com/json/v5/reports'
 
     # Создание HTTP-заголовков запроса
     headers = {
-        "Authorization": "Bearer " + tokens.TOKEN,
+        "Authorization": "Bearer " + os.getenv('TOKEN', ''),
         "Accept-Language": "ru",
         "processingMode": "auto",
         # Формат денежных значений в отчете

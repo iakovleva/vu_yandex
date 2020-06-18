@@ -1,8 +1,8 @@
+import os
 import sys
 import logging
 from datetime import date, timedelta
 
-import tokens
 import gspread_authorize
 import yandex_data
 
@@ -25,7 +25,7 @@ def write_to_spreadsheet(period):
 
     gc = gspread_authorize.authorize()
     worksheet = gspread_authorize.open_sheet(
-        gc, tokens.SPREADSHEET_INCOME, period
+        gc, os.getenv('SPREADSHEET_INCOME'), period
     )
 
     if period == 'hourly':

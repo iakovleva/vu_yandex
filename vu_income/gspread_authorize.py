@@ -1,6 +1,6 @@
+import os
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-import tokens
 
 
 def authorize():
@@ -9,14 +9,15 @@ def authorize():
     # Gspread authorize
     scope = ['https://spreadsheets.google.com/feeds',
              'https://www.googleapis.com/auth/drive']
-    cred_file = tokens.CRED_FILE
+    cred_file = os.getenv('CRED_FILE')
     credentials = ServiceAccountCredentials.from_json_keyfile_name(
         cred_file,
         scope
         )
     return gspread.authorize(credentials)
 
-def open_sheet(gc, url, worksheet):    
+
+def open_sheet(gc, url, worksheet):
     """Open Google Spreadsheet."""
 
     gc = authorize()

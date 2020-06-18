@@ -20,11 +20,8 @@ Script uses:
 3. Create project
 
 ```
-(create virtualenv)
 git clone https://github.com/iakovleva/vu_yandex
 cd vu_yandex
-pip install -r requirements.txt
-cd vu_income
 ```
 
 4. Get Google API credentials for Gspread authorize. 
@@ -40,7 +37,7 @@ SPREADSHEET_INCOME - Google Spreadsheet URL
 6. Build image and run container
 
 ```
-docker build . vu_income:yandex
+docker build . -t vu_income:yandex
 docker run --env-file .env vu_income:yandex hourly 
 docker run --env-file .env vu_income:yandex daily 
 ```
@@ -48,5 +45,5 @@ docker run --env-file .env vu_income:yandex daily
 7. Optionally add cron job 
 
 ```
-* * * * * /usr/bin/docker run --env-file .env vu_income:yandex > ~/vu_yandex/vu_income/hourly.log
+* * * * * /usr/bin/docker run --env-file .env vu_income:yandex hourly > ~/vu_yandex/hourly.log
 ```

@@ -33,14 +33,20 @@ def write_to_spreadsheet(period):
         date_column = worksheet.cell(2, 1).value.split()
         today = date.today().strftime('%d.%m')
         if today in date_column:
-            worksheet.update_cell(2, 5, ya_spend)
+            cell_shift=7
+            for i in ya_spend:
+                worksheet.update_cell(2, cell_shift, ya_spend[i])
+                cell_shift+=1
 
     if period == 'daily':
         ya_spend = yandex_data.get_expenses('YESTERDAY')
         yesterday = get_yesterday_date()
         date_cell = worksheet.find('{}'.format(yesterday))
         if date_cell:
-            worksheet.update_cell(date_cell.row, 10, ya_spend)
+            cell_shift=7
+            for i in ya_spend:
+                worksheet.update_cell(date_cell.row, cell_shift, ya_spend[i])
+                cell_shift+=1
 
 
 if __name__ == '__main__':

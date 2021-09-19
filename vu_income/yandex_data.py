@@ -3,19 +3,40 @@ import json
 from time import sleep
 import requests
 
+dict_cities={'Москва': 0, 'СПб': 0, 'Архангельск': 0, 'Астрахань': 0, 'Балашиха': 0, 'Барнаул': 0, 'Белгород': 0, 'Благовещенск': 0, 'Брянск': 0, 'Владивосток': 0, 'Владимир': 0, 'Волгоград': 0, 'Вологда': 0, 'Воронеж': 0, 'Екатеринбург': 0, 'Ижевск': 0, 'Иркутск': 0, 'Казань': 0, 'Калининград': 0, 'Калуга': 0, 'Кемерово': 0, 'Киров': 0, 'Краснодар': 0, 'Красноярск': 0, 'Курск': 0, 'Липецк': 0, 'Майкоп': 0, 'Махачкала': 0, 'Нальчик': 0, 'Набережные': 0, 'Нижний Новгород': 0, 'Новокузнецк': 0, 'Новосибирск': 0, 'Омск': 0, 'Оренбург': 0, 'Пенза': 0, 'Пермь': 0, 'Ростов-на-Дону': 0, 'Рязань': 0, 'Самара': 0, 'Саратов': 0, 'Севастополь': 0, 'Ставрополь': 0, 'Тольятти': 0, 'Томск': 0, 'Тюмень': 0, 'Ульяновск': 0, 'Уфа': 0, 'Хабаровск': 0, 'Челябинск': 0, 'Ярославль': 0, 'Partner promo': 0}
 
+def group_by_city(report, dict_cities):
+    report=report.splitlines()
+    for i in report:
+        # счетчик для проверки что ключ словаря найден в строке
+        c=0
+        for j in dict_cities:
+           # Сверка каждого ключа с частью строки до тире
+            if j in i.partition('-')[0]:
+               # последняя часть строки добавляеться к текущему значению
+                dict_cities[j]+=float(i.split('-')[-1].split()[-1])
+                break
+            else:
+                c+=1
+    #    if c==len(dict_cities):
+    #        print("НЕ НАЙДЕНО:", i)
+    #  округление всех значений словаря        
+    for j in dict_cities:
+        dict_cities[j]=round(dict_cities[j], 2)
+    return dict_cities
+    
+    
 def get_expenses(period):
     """ Gets expenses per period from website's API.
-
     Parameters:
     period(str): 'TODAY' or 'YESTERDAY'.
-
     Returns:
     total_sum(int): sum of expenses from all campaigns or prints error if fails.
     """
 
     # --- Входные данные ---
     reports_url = 'https://api.direct.yandex.com/json/v5/reports'
+    #ReportsURL = 'https://api-sandbox.direct.yandex.com/json/v5/reports'
 
     # Создание HTTP-заголовков запроса
     headers = {
@@ -38,6 +59,7 @@ def get_expenses(period):
             "SelectionCriteria": {
             },
             "FieldNames": [
+                "CampaignName",
                 "Cost"
             ],
             "ReportName": "TODAY's Income",
@@ -64,10 +86,7 @@ def get_expenses(period):
                 print("JSON-код ответа сервера: \n{}".format(req.json()))
                 break
             elif req.status_code == 200:
-                total_sum = 0
-                for i in req.text.split():
-                    total_sum += float(i)
-                return total_sum
+                return group_by_city(req.text, dict_cities)
                 break
             elif req.status_code == 201:
                 print("Отчет успешно поставлен в очередь в режиме офлайн")

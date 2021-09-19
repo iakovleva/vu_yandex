@@ -37,9 +37,14 @@ SPREADSHEET_INCOME - Google Spreadsheet URL
 6. Build image and run container
 
 ```
-docker build . -t vu_income:yandex
-docker run --env-file .env vu_income:yandex hourly 
-docker run --env-file .env vu_income:yandex daily 
+docker run --rm --env-file .env $(docker build -q .) hourly
+docker run --rm --env-file .env $(docker build -q .) daily 
+```
+
+Detailed by regions:
+```
+docker run --rm --env-file .env $(docker build -q .) hourly regions
+docker run --rm --env-file .env $(docker build -q .) daily regions
 ```
 
 7. Optionally add cron job 
